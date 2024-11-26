@@ -17,6 +17,7 @@ public class BookServiceImpl implements BookService {
 
     public String getAuthorByTitle(String title) {
         Book book = bookRepository.findByTitle(title);
+        System.out.println("get author by title "+title);
         return book != null ? book.getAuthor() : null; // 返回 null 如果书籍未找到
     }
 }
