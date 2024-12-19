@@ -1,6 +1,7 @@
 package com.example.bookstore.controller;
 
 import com.example.bookstore.entity.Book;
+import com.example.bookstore.entity.BookSearchResult;
 import com.example.bookstore.entity.GraphBook;
 import com.example.bookstore.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,8 @@ public class GraphSearchController {
     private BookService bookService;
 
     @SchemaMapping(typeName = "Query", field = "searchBookByTitle")
-    public List<GraphBook> searchBookByTitle(@Argument String title) {
-        System.out.println("Received GraphQL query with title: " + title);
-        return bookService.searchGraph(title);
+    public BookSearchResult searchBookByTitle(@Argument String keyword, @Argument int pageIndex, @Argument int pageSize, @Argument String tag) {
+        System.out.println("Received GraphQL query with keyword: " + keyword);
+        return bookService.searchGraph(keyword, pageIndex, pageSize, tag);
     }
 }

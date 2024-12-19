@@ -2,6 +2,7 @@ package com.example.bookstore.service;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.example.bookstore.entity.BookPage;
+import com.example.bookstore.entity.BookSearchResult;
 import com.example.bookstore.entity.GraphBook;
 import org.springframework.stereotype.Service;
 
@@ -40,5 +41,5 @@ public interface BookService {
 
   JSONObject deleteBook(long bookId);
 
-  List<GraphBook> searchGraph(String title);
+  BookSearchResult searchGraph(String title, int pageIndex, int pageSize, String tag);
 }

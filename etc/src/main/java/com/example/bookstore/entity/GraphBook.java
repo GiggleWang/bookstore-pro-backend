@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -18,6 +20,7 @@ public class GraphBook {
     private Integer price;
     private Integer sales;
     private Integer repertory;
+    private List<String> tags;
 
     // 构造函数
     public GraphBook() {

@@ -3,10 +3,7 @@ package com.example.bookstore.service.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.example.bookstore.dao.BookDao;
-import com.example.bookstore.entity.Book;
-import com.example.bookstore.entity.Comment;
-import com.example.bookstore.entity.GraphBook;
-import com.example.bookstore.entity.User;
+import com.example.bookstore.entity.*;
 import com.example.bookstore.repository.BookTagRepository;
 import com.example.bookstore.repository.CommentRepository;
 import com.example.bookstore.repository.UserRepository;
@@ -94,7 +91,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public JSONObject getBookInfo(long bookId) {
         Book book = bookDao.findById(bookId);
-        if(book == null){
+        if (book == null) {
             return null;
         }
         JSONObject bookJson = book.toJson();
@@ -178,18 +175,20 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<GraphBook> searchGraph(String title) {
-        JSONObject search_res = this.searchBooks(title, 0, 10, "");
+    public BookSearchResult searchGraph(String title, int pageIndex, int pageSize, String tag) {
+        JSONObject searchRes = this.searchBooks(title, pageIndex, pageSize, tag);
 
-        // 获取 items 数组
-        JSONArray items = search_res.getJSONArray("items");
-        System.out.println(items);
+        // 获取分页信息和items数组
+        Integer totalNumber = searchRes.getInteger("totalNumber");
+        Integer totalPage = searchRes.getInteger("totalPage");
+        JSONArray items = searchRes.getJSONArray("items");
+
         // 将 JSONArray 转换为 List<GraphBook>
-        return items.stream()
+        List<GraphBook> bookList = items.stream()
                 .map(item -> {
                     JSONObject bookJson = (JSONObject) item;
                     return GraphBook.builder()
-                            .bookId(bookJson.getInteger("bookId"))
+                            .bookId(bookJson.getInteger("id"))
                             .title(bookJson.getString("title"))
                             .author(bookJson.getString("author"))
                             .isbn(bookJson.getString("isbn"))
@@ -198,9 +197,16 @@ public class BookServiceImpl implements BookService {
                             .price(bookJson.getInteger("price"))
                             .sales(bookJson.getInteger("sales"))
                             .repertory(bookJson.getInteger("repertory"))
+                            .tags(bookJson.getJSONArray("tags").toJavaList(String.class))
                             .build();
                 })
                 .collect(Collectors.toList());
-    }
 
+        // 构建并返回最终结果
+        return BookSearchResult.builder()
+                .totalNumber(totalNumber)
+                .totalPage(totalPage)
+                .items(bookList)
+                .build();
+    }
 }

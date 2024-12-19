@@ -1,5 +1,11 @@
 type Query {
-    searchBookByTitle(title: String): [GraphBook]
+    searchBookByTitle(keyword: String, pageIndex: Int, pageSize: Int, tag: String): BookSearchResult
+}
+
+type BookSearchResult {
+    totalNumber: Int
+    totalPage: Int
+    items: [GraphBook]
 }
 
 type GraphBook {
@@ -12,4 +18,5 @@ type GraphBook {
     price: Int
     sales: Int
     repertory: Int
+    tags: [String]
 }
