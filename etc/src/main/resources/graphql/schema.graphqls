@@ -1,0 +1,15 @@
+type Query {
+    searchBookByTitle(title: String): [GraphBook]
+}
+
+type GraphBook {
+    bookId: Int
+    title: String
+    author: String
+    isbn: String
+    cover: String
+    description: String
+    price: Int
+    sales: Int
+    repertory: Int
+}
